@@ -80,6 +80,63 @@ final class ClassLoader
         'Flash' => 'Infrastructure/Entrypoints/Web/Presentation/Flash.php',
 
         'DependencyInjection' => 'Common/DependencyInjection.php',
+
+        // ── Docente (ejercicio 3) ─────────────────────────────────
+        'InvalidDocenteIdException' => 'Domain/Exceptions/InvalidDocenteIdException.php',
+        'InvalidDocenteNombreException' => 'Domain/Exceptions/InvalidDocenteNombreException.php',
+        'InvalidDocenteEmailException' => 'Domain/Exceptions/InvalidDocenteEmailException.php',
+        'InvalidDocenteTelefonoException' => 'Domain/Exceptions/InvalidDocenteTelefonoException.php',
+        'InvalidDocenteBlogException' => 'Domain/Exceptions/InvalidDocenteBlogException.php',
+        'InvalidDocenteAniosExperienciaException' => 'Domain/Exceptions/InvalidDocenteAniosExperienciaException.php',
+        'InvalidDocenteCampoTextoException' => 'Domain/Exceptions/InvalidDocenteCampoTextoException.php',
+        'InvalidDocenteEscalafonException' => 'Domain/Exceptions/InvalidDocenteEscalafonException.php',
+        'InvalidDocenteIdiomaException' => 'Domain/Exceptions/InvalidDocenteIdiomaException.php',
+        'DocenteAlreadyExistsException' => 'Domain/Exceptions/DocenteAlreadyExistsException.php',
+        'DocenteNotFoundException' => 'Domain/Exceptions/DocenteNotFoundException.php',
+
+        'DocenteEscalafonEnum' => 'Domain/Enums/DocenteEscalafonEnum.php',
+        'DocenteIdiomaEnum' => 'Domain/Enums/DocenteIdiomaEnum.php',
+
+        'DocenteId' => 'Domain/ValueObjects/DocenteId.php',
+        'DocenteNombre' => 'Domain/ValueObjects/DocenteNombre.php',
+        'DocenteEmail' => 'Domain/ValueObjects/DocenteEmail.php',
+        'DocenteTelefono' => 'Domain/ValueObjects/DocenteTelefono.php',
+        'DocenteBlog' => 'Domain/ValueObjects/DocenteBlog.php',
+        'DocenteAniosExperiencia' => 'Domain/ValueObjects/DocenteAniosExperiencia.php',
+        'DocenteCampoTexto' => 'Domain/ValueObjects/DocenteCampoTexto.php',
+
+        'DocenteModel' => 'Domain/Models/DocenteModel.php',
+
+        'CreateDocenteUseCase' => 'Application/Ports/In/CreateDocenteUseCase.php',
+        'UpdateDocenteUseCase' => 'Application/Ports/In/UpdateDocenteUseCase.php',
+        'GetDocenteByIdUseCase' => 'Application/Ports/In/GetDocenteByIdUseCase.php',
+        'GetAllDocentesUseCase' => 'Application/Ports/In/GetAllDocentesUseCase.php',
+        'DeleteDocenteUseCase' => 'Application/Ports/In/DeleteDocenteUseCase.php',
+
+        'SaveDocentePort' => 'Application/Ports/Out/SaveDocentePort.php',
+        'UpdateDocentePort' => 'Application/Ports/Out/UpdateDocentePort.php',
+        'GetDocenteByIdPort' => 'Application/Ports/Out/GetDocenteByIdPort.php',
+        'GetDocenteByEmailPort' => 'Application/Ports/Out/GetDocenteByEmailPort.php',
+        'GetAllDocentesPort' => 'Application/Ports/Out/GetAllDocentesPort.php',
+        'DeleteDocentePort' => 'Application/Ports/Out/DeleteDocentePort.php',
+
+        'CreateDocenteCommand' => 'Application/Services/Dto/Commands/CreateDocenteCommand.php',
+        'UpdateDocenteCommand' => 'Application/Services/Dto/Commands/UpdateDocenteCommand.php',
+        'DeleteDocenteCommand' => 'Application/Services/Dto/Commands/DeleteDocenteCommand.php',
+        'GetDocenteByIdQuery' => 'Application/Services/Dto/Queries/GetDocenteByIdQuery.php',
+        'GetAllDocentesQuery' => 'Application/Services/Dto/Queries/GetAllDocentesQuery.php',
+
+        'CreateDocenteService' => 'Application/Services/CreateDocenteService.php',
+        'UpdateDocenteService' => 'Application/Services/UpdateDocenteService.php',
+        'GetDocenteByIdService' => 'Application/Services/GetDocenteByIdService.php',
+        'GetAllDocentesService' => 'Application/Services/GetAllDocentesService.php',
+        'DeleteDocenteService' => 'Application/Services/DeleteDocenteService.php',
+        'DocenteApplicationMapper' => 'Application/Services/Mappers/DocenteApplicationMapper.php',
+
+        'DocentePersistenceDto' => 'Infrastructure/Adapters/Persistence/MySQL/Dto/DocentePersistenceDto.php',
+        'DocenteEntity' => 'Infrastructure/Adapters/Persistence/MySQL/Entity/DocenteEntity.php',
+        'DocentePersistenceMapper' => 'Infrastructure/Adapters/Persistence/MySQL/Mapper/DocentePersistenceMapper.php',
+        'DocenteRepositoryMySQL' => 'Infrastructure/Adapters/Persistence/MySQL/Repository/DocenteRepositoryMySQL.php',
     );
 
     public static function register(): void

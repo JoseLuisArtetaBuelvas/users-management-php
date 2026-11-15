@@ -148,6 +148,56 @@ final class DependencyInjection
         );
     }
 
+    // ── Docente (ejercicio 3) ─────────────────────────────────────
+
+    public static function getDocenteRepository(): DocenteRepositoryMySQL
+    {
+        ClassLoader::loadClass('DocenteRepositoryMySQL');
+
+        return new DocenteRepositoryMySQL(
+            self::getPdo(),
+            new DocentePersistenceMapper()
+        );
+    }
+
+    public static function getCreateDocenteUseCase(): CreateDocenteUseCase
+    {
+        ClassLoader::loadClass('CreateDocenteService');
+        $repository = self::getDocenteRepository();
+
+        return new CreateDocenteService($repository, $repository);
+    }
+
+    public static function getUpdateDocenteUseCase(): UpdateDocenteUseCase
+    {
+        ClassLoader::loadClass('UpdateDocenteService');
+        $repository = self::getDocenteRepository();
+
+        return new UpdateDocenteService($repository, $repository, $repository);
+    }
+
+    public static function getGetDocenteByIdUseCase(): GetDocenteByIdUseCase
+    {
+        ClassLoader::loadClass('GetDocenteByIdService');
+
+        return new GetDocenteByIdService(self::getDocenteRepository());
+    }
+
+    public static function getGetAllDocentesUseCase(): GetAllDocentesUseCase
+    {
+        ClassLoader::loadClass('GetAllDocentesService');
+
+        return new GetAllDocentesService(self::getDocenteRepository());
+    }
+
+    public static function getDeleteDocenteUseCase(): DeleteDocenteUseCase
+    {
+        ClassLoader::loadClass('DeleteDocenteService');
+        $repository = self::getDocenteRepository();
+
+        return new DeleteDocenteService($repository, $repository);
+    }
+
     public static function getLoginUseCase(): LoginUseCase
     {
         ClassLoader::loadClass('LoginService');
