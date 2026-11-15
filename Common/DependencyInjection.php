@@ -23,7 +23,9 @@ final class DependencyInjection
             database: EnvLoader::get('DB_DATABASE', 'crud_usuarios'),
             username: EnvLoader::get('DB_USERNAME', 'root'),
             password: EnvLoader::get('DB_PASSWORD', ''),
-            charset: EnvLoader::get('DB_CHARSET', 'utf8mb4')
+            charset: EnvLoader::get('DB_CHARSET', 'utf8mb4'),
+            driver: EnvLoader::get('DB_DRIVER', 'mysql'),
+            sslMode: EnvLoader::get('DB_SSLMODE', '')
         );
     }
 

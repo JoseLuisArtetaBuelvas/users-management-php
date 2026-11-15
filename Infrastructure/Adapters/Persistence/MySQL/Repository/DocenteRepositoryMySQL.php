@@ -107,13 +107,15 @@ final class DocenteRepositoryMySQL implements
         $parameters = array();
 
         if ($search !== null && $search !== '') {
+            // LOWER en ambos lados: búsqueda sin distinguir mayúsculas
+            // tanto en MySQL como en PostgreSQL (donde LIKE sí distingue).
             $sql .= '
-                WHERE nombre LIKE :s1
-                   OR apellidos LIKE :s2
-                   OR email LIKE :s3
-                   OR area_trabajo LIKE :s4
+                WHERE LOWER(nombre) LIKE :s1
+                   OR LOWER(apellidos) LIKE :s2
+                   OR LOWER(email) LIKE :s3
+                   OR LOWER(area_trabajo) LIKE :s4
             ';
-            $like = '%' . $search . '%';
+            $like = '%' . mb_strtolower($search) . '%';
             $parameters = array(':s1' => $like, ':s2' => $like, ':s3' => $like, ':s4' => $like);
         }
 
