@@ -214,6 +214,57 @@ final class DependencyInjection
         );
     }
 
+    // ── Universidad (ejercicio 2) ─────────────────────────────────
+
+    public static function getUniversidadRepository(): UniversidadRepositoryMySQL
+    {
+        ClassLoader::loadClass('UniversidadRepositoryMySQL');
+
+        return new UniversidadRepositoryMySQL(
+            self::getPdo(),
+            new UniversidadPersistenceMapper()
+        );
+    }
+
+    public static function getCreateUniversidadUseCase(): CreateUniversidadUseCase
+    {
+        ClassLoader::loadClass('CreateUniversidadService');
+        $repository = self::getUniversidadRepository();
+
+        // El mismo repositorio cumple los tres puertos de salida
+        return new CreateUniversidadService($repository, $repository, $repository);
+    }
+
+    public static function getUpdateUniversidadUseCase(): UpdateUniversidadUseCase
+    {
+        ClassLoader::loadClass('UpdateUniversidadService');
+        $repository = self::getUniversidadRepository();
+
+        return new UpdateUniversidadService($repository, $repository, $repository, $repository);
+    }
+
+    public static function getGetUniversidadByIdUseCase(): GetUniversidadByIdUseCase
+    {
+        ClassLoader::loadClass('GetUniversidadByIdService');
+
+        return new GetUniversidadByIdService(self::getUniversidadRepository());
+    }
+
+    public static function getGetAllUniversidadesUseCase(): GetAllUniversidadesUseCase
+    {
+        ClassLoader::loadClass('GetAllUniversidadesService');
+
+        return new GetAllUniversidadesService(self::getUniversidadRepository());
+    }
+
+    public static function getDeleteUniversidadUseCase(): DeleteUniversidadUseCase
+    {
+        ClassLoader::loadClass('DeleteUniversidadService');
+        $repository = self::getUniversidadRepository();
+
+        return new DeleteUniversidadService($repository, $repository);
+    }
+
     public static function getLoginUseCase(): LoginUseCase
     {
         ClassLoader::loadClass('LoginService');
