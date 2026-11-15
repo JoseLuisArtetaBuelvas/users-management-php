@@ -1,5 +1,5 @@
 # ================================================================
-# CRUD Usuarios / Docentes — imagen para Render
+# CRUD Usuarios / Universidades — imagen para Render
 # PHP 8.3 + Apache con mod_rewrite (usa el .htaccess del proyecto)
 # y los drivers PDO de MySQL y PostgreSQL (Supabase).
 # ================================================================
