@@ -6,8 +6,6 @@
     <?php if ($authUser): ?>
         <a href="?route=users.create">Registrar usuario</a>
         <a href="?route=users.index">Listar usuarios</a>
-        <a href="?route=docentes.create">Registrar docente</a>
-        <a href="?route=docentes.index">Listar docentes</a>
         <a href="?route=universidades.create">Registrar universidad</a>
         <a href="?route=universidades.index">Listar universidades</a>
         <span style="margin: 0 10px; color:#555;">|</span>

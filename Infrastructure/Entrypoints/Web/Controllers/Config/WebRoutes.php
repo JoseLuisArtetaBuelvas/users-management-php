@@ -63,36 +63,6 @@ final class WebRoutes
                 'action' => 'forgot.send',
             ),
 
-            // ── Docentes (ejercicio 3) ── requieren sesión iniciada
-            'docentes.index' => array(
-                'method' => 'GET',
-                'action' => 'docentes.index',
-            ),
-            'docentes.create' => array(
-                'method' => 'GET',
-                'action' => 'docentes.create',
-            ),
-            'docentes.store' => array(
-                'method' => 'POST',
-                'action' => 'docentes.store',
-            ),
-            'docentes.show' => array(
-                'method' => 'GET',
-                'action' => 'docentes.show',
-            ),
-            'docentes.edit' => array(
-                'method' => 'GET',
-                'action' => 'docentes.edit',
-            ),
-            'docentes.update' => array(
-                'method' => 'POST',
-                'action' => 'docentes.update',
-            ),
-            'docentes.delete' => array(
-                'method' => 'POST',
-                'action' => 'docentes.delete',
-            ),
-
             // ── Universidades (ejercicio 2) ── requieren sesión iniciada
             'universidades.index' => array(
                 'method' => 'GET',

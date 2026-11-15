@@ -135,7 +135,7 @@ table.detail-table th {
     border-radius: 6px;
     background: #fafafa;
 }
-/* ── Docentes (ejercicio 3) ── */
+/* ── Formularios en grilla, búsqueda e insignias ── */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
