@@ -40,10 +40,10 @@ function universidadValida(array $overrides = array()): UniversidadModel
         'nombre' => 'Universidad de Cartagena',
         'categoria' => UniversidadCategoriaEnum::PUBLICA,
         'web' => 'https://www.unicartagena.edu.co',
-        'rector' => 'William Malkun Castillejo',
+        'rector' => 'María Fernanda Ríos',
         'email' => 'Rectoria@Unicartagena.edu.co',
         'acceso' => UniversidadAccesoEnum::PRUEBAS_SABER_11,
-        'telefono' => '+57 605 660 0676',
+        'telefono' => '+57 605 600 1234',
         'ciudad' => 'Cartagena',
         'numeroCarreras' => '42',
         'numSedes' => '5',
@@ -78,7 +78,7 @@ check('Nombres iguales sin importar mayúsculas',
 
 $nueva = $u->cambiarRector(UniversidadNombrePropio::rector('Ana María Pérez'));
 check('cambiarRector devuelve una nueva instancia', $nueva !== $u);
-check('El original no cambia (inmutable)', $u->rector()->value() === 'William Malkun Castillejo');
+check('El original no cambia (inmutable)', $u->rector()->value() === 'María Fernanda Ríos');
 check('abrirSede suma una sede', $u->abrirSede()->numSedes()->value() === 6);
 
 $evento = new UniversidadCreatedDomainEvent($u);
