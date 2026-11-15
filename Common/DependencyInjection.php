@@ -265,6 +265,20 @@ final class DependencyInjection
         return new DeleteUniversidadService($repository, $repository);
     }
 
+    public static function getUniversidadController(): UniversidadController
+    {
+        ClassLoader::loadClass('UniversidadController');
+
+        return new UniversidadController(
+            self::getCreateUniversidadUseCase(),
+            self::getUpdateUniversidadUseCase(),
+            self::getGetUniversidadByIdUseCase(),
+            self::getGetAllUniversidadesUseCase(),
+            self::getDeleteUniversidadUseCase(),
+            new UniversidadWebMapper()
+        );
+    }
+
     public static function getLoginUseCase(): LoginUseCase
     {
         ClassLoader::loadClass('LoginService');

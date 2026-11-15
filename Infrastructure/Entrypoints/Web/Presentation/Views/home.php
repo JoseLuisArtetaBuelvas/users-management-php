@@ -25,6 +25,16 @@
     <li><strong>L:</strong> Listar usuarios</li>
 </ul>
 
+<h2>CRUDL de universidades (ejercicio 2)</h2>
+
+<ul>
+    <li><strong>C:</strong> <a href="?route=universidades.create">Registrar universidad</a></li>
+    <li><strong>R:</strong> Consultar universidad (botón <em>Ver</em> del listado)</li>
+    <li><strong>U:</strong> Actualizar universidad (botón <em>Editar</em> del listado)</li>
+    <li><strong>D:</strong> Eliminar universidad (botón <em>Eliminar</em> del listado)</li>
+    <li><strong>L:</strong> <a href="?route=universidades.index">Listar y buscar universidades</a></li>
+</ul>
+
 <h2>CRUDL de docentes (ejercicio 3)</h2>
 
 <ul>

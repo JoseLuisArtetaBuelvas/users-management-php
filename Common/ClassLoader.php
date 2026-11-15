@@ -201,6 +201,12 @@ final class ClassLoader
         'UniversidadEntity' => 'Infrastructure/Adapters/Persistence/MySQL/Entity/UniversidadEntity.php',
         'UniversidadPersistenceMapper' => 'Infrastructure/Adapters/Persistence/MySQL/Mapper/UniversidadPersistenceMapper.php',
         'UniversidadRepositoryMySQL' => 'Infrastructure/Adapters/Persistence/MySQL/Repository/UniversidadRepositoryMySQL.php',
+
+        'CreateUniversidadWebRequest' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/CreateUniversidadRequest.php',
+        'UpdateUniversidadWebRequest' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/UpdateUniversidadRequest.php',
+        'UniversidadResponse' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/UniversidadResponse.php',
+        'UniversidadWebMapper' => 'Infrastructure/Entrypoints/Web/Controllers/Mapper/UniversidadWebMapper.php',
+        'UniversidadController' => 'Infrastructure/Entrypoints/Web/Controllers/UniversidadController.php',
     );
 
     public static function register(): void
