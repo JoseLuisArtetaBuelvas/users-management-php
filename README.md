@@ -118,57 +118,61 @@ Aplicación web PHP para la gestión de usuarios: registro, listado, visualizaci
 
 ---
 
-## Ejercicio 3: CRUDL de Docente
+## Ejercicio 2: CRUDL de Universidad
 
-Además de la entidad común **Usuario**, el proyecto implementa el CRUDL de la entidad **Docente** respetando las mismas capas.
+Además de la entidad común **Usuario**, el proyecto implementa el CRUDL de la entidad **Universidad** respetando las mismas capas.
 
 **Estudiante:** José Luis Arteta Buelvas
+
+> Nota del historial: por un error de lectura del enunciado primero se implementó la entidad Docente (ejercicio 3). Al detectarlo se implementó Universidad (ejercicio 2) y luego se eliminó Docente en la rama `refactor/remove-docente`.
 
 ### Atributos y reglas de negocio
 
 | Atributo | Regla (Value Object / Enum) |
 |---|---|
-| id | UUID v4 generado por la aplicación (`DocenteId`) |
-| nombre, apellidos | Obligatorios, 2 a 100 caracteres, solo letras y espacios (`DocenteNombre`) |
-| email | Formato válido, se guarda en minúsculas y no se repite (`DocenteEmail`) |
-| telefono | 7 a 15 dígitos; admite `+`, espacios y guiones (`DocenteTelefono`) |
-| blog | Opcional; si se informa debe ser URL `http(s)` (`DocenteBlog`) |
-| profesional | Título profesional, 3 a 150 caracteres (`DocenteCampoTexto`) |
-| escalafon | `AUXILIAR`, `ASISTENTE`, `ASOCIADO`, `TITULAR` (`DocenteEscalafonEnum`) |
-| idioma | `ESPANOL`, `INGLES`, `FRANCES`, `PORTUGUES`, `ALEMAN`, `OTRO` (`DocenteIdiomaEnum`) |
-| aniosExperiencia | Entero entre 0 y 60 (`DocenteAniosExperiencia`) |
-| areaTrabajo | 3 a 150 caracteres (`DocenteCampoTexto`) |
+| id | UUID v4 generado por la aplicación (`UniversidadId`) |
+| nombre | 3 a 120 caracteres; letras, números y `. , - ' ( ) &`; único sin importar mayúsculas (`UniversidadNombre`) |
+| categoria | `PUBLICA` o `PRIVADA` (`UniversidadCategoriaEnum`) |
+| web | Obligatoria, URL `http(s)` válida (`UniversidadWeb`) |
+| rector | 5 a 100 caracteres, solo letras y espacios (`UniversidadNombrePropio::rector`) |
+| email | Formato válido, en minúsculas y único (`UniversidadEmail`) |
+| acceso | `EXAMEN_ADMISION`, `PRUEBAS_SABER_11`, `INGRESO_DIRECTO`, `MIXTO` (`UniversidadAccesoEnum`) |
+| telefono | 7 a 15 dígitos; admite `+`, espacios y guiones (`UniversidadTelefono`) |
+| ciudad | 2 a 60 caracteres, solo letras y espacios (`UniversidadNombrePropio::ciudad`) |
+| numeroCarreras | Entero de 1 a 500 (`UniversidadCantidad::numeroCarreras`) |
+| numSedes | Entero de 1 a 100 (`UniversidadCantidad::numSedes`) |
 
-Regla adicional del modelo: un docente con 10 o más años de experiencia es **experimentado** (`DocenteModel::esExperimentado()`).
+Reglas del modelo (`UniversidadModel`): `esPublica()`, `esMultisede()` (más de una sede) y `carrerasPorSede()`. Es inmutable: `cambiarRector()` y `abrirSede()` devuelven una nueva instancia.
 
 ### Archivos por capa
 
 | Capa | Elementos |
 |---|---|
-| Dominio | `DocenteModel`, 7 Value Objects, 2 Enums, 11 excepciones, 3 eventos (`docente.created/updated/deleted`) |
-| Aplicación | 6 puertos de salida, 5 casos de uso (puertos de entrada), 3 commands, 2 queries, `DocenteApplicationMapper`, 5 servicios |
-| Infraestructura (adaptador) | `DocentePersistenceDto`, `DocenteEntity`, `DocentePersistenceMapper`, `DocenteRepositoryMySQL` |
-| Infraestructura (entrypoint) | `CreateDocenteWebRequest`, `UpdateDocenteWebRequest`, `DocenteResponse`, `DocenteWebMapper`, `DocenteController`, rutas `docentes.*` y vistas `Views/docentes` |
+| Dominio | `UniversidadModel`, 7 Value Objects, 2 Enums, 11 excepciones, 3 eventos (`universidad.created/updated/deleted`) |
+| Aplicación | 7 puertos de salida, 5 casos de uso (puertos de entrada), 3 commands, 2 queries, `UniversidadApplicationMapper`, 5 servicios |
+| Infraestructura (adaptador) | `UniversidadPersistenceDto`, `UniversidadEntity`, `UniversidadPersistenceMapper`, `UniversidadRepositoryMySQL` |
+| Infraestructura (entrypoint) | `CreateUniversidadWebRequest`, `UpdateUniversidadWebRequest`, `UniversidadResponse`, `UniversidadWebMapper`, `UniversidadController`, rutas `universidades.*` y vistas `Views/universidades` |
 | Común | Registro en `ClassLoader` e inyección en `DependencyInjection` |
 
-### Flujo de una operación (crear docente)
+### Flujo de una operación (crear universidad)
 
 ```
-Formulario HTML -> public/index.php (docentes.store) -> CreateDocenteWebRequest
-  -> DocenteWebMapper -> CreateDocenteCommand -> CreateDocenteService (CreateDocenteUseCase)
-  -> DocenteApplicationMapper -> DocenteModel (Value Objects validan)
-  -> SaveDocentePort -> DocenteRepositoryMySQL -> tabla docentes
+Formulario HTML -> public/index.php (universidades.store) -> CreateUniversidadWebRequest
+  -> UniversidadWebMapper -> CreateUniversidadCommand -> CreateUniversidadService (CreateUniversidadUseCase)
+  -> UniversidadApplicationMapper -> UniversidadModel (Value Objects validan)
+  -> GetUniversidadByNombrePort / GetUniversidadByEmailPort (unicidad)
+  -> SaveUniversidadPort -> UniversidadRepositoryMySQL -> tabla universidades
 ```
 
 ### Rutas
 
 | Ruta | Método | Operación |
 |---|---|---|
-| `?route=docentes.index&q=texto` | GET | Listar y buscar (L) |
-| `?route=docentes.create` / `docentes.store` | GET / POST | Registrar (C) |
-| `?route=docentes.show&id=...` | GET | Consultar (R) |
-| `?route=docentes.edit&id=...` / `docentes.update` | GET / POST | Actualizar (U) |
-| `docentes.delete` | POST | Eliminar (D) |
+| `?route=universidades.index&q=texto` | GET | Listar y buscar por nombre, ciudad, rector o correo (L) |
+| `?route=universidades.create` / `universidades.store` | GET / POST | Registrar (C) |
+| `?route=universidades.show&id=...` | GET | Consultar (R) |
+| `?route=universidades.edit&id=...` / `universidades.update` | GET / POST | Actualizar (U) |
+| `universidades.delete` | POST | Eliminar (D) |
 
 Todas requieren sesión iniciada.
 
@@ -180,7 +184,7 @@ Todas requieren sesión iniciada.
 2. Crear la base de datos ejecutando, en orden:
    ```
    database/01_crud_usuarios.sql   (usuario Estudiante, tabla users y admin base)
-   database/02_docentes.sql        (tabla docentes y datos de ejemplo)
+   database/02_universidades.sql   (tabla universidades y datos de ejemplo)
    ```
 3. Copiar `.env.example` a `.env` y ajustar `DB_HOST`, `DB_PORT`, `DB_USERNAME=Estudiante`, `DB_PASSWORD=Developer`.
 4. Levantar el servidor desde la raíz del proyecto:
@@ -194,15 +198,16 @@ Todas requieren sesión iniciada.
 ### Pruebas
 
 ```
-php tests/DocenteDomainTest.php            # reglas del dominio (26 casos)
-php tests/DocenteApplicationTest.php       # casos de uso con adaptador en memoria (11 casos)
-php tests/DocenteRepositoryMySQLTest.php   # integración con MySQL (6 casos, requiere la BD)
+php tests/UniversidadDomainTest.php            # reglas del dominio (29 casos)
+php tests/UniversidadApplicationTest.php       # casos de uso con adaptador en memoria (12 casos)
+php tests/UniversidadRepositoryMySQLTest.php   # integración con la BD configurada en .env (6 casos)
 ```
+
 ---
 
 ## Despliegue: Render + Supabase (PostgreSQL)
 
-La base de datos en la nube es **Supabase (PostgreSQL)** y la aplicación corre en **Render** con Docker. Gracias a la arquitectura hexagonal, el cambio de motor solo tocó la infraestructura (`Connection` y una consulta); dominio y aplicación no cambiaron.
+La base de datos en la nube es **Supabase (PostgreSQL)** y la aplicación corre en **Render** con Docker. Gracias a la arquitectura hexagonal, el cambio de motor solo tocó la infraestructura (`Connection` y consultas de búsqueda portables); dominio y aplicación no cambiaron.
 
 ### Variables de entorno
 
@@ -221,7 +226,7 @@ Toda la configuración sale de variables de entorno (`EnvLoader`). En local se l
 ### 1. Supabase
 
 1. Crear un proyecto en supabase.com y guardar la clave de la base de datos.
-2. *SQL Editor* → ejecutar `database/postgresql/01_crud_usuarios.sql` y luego `database/postgresql/02_docentes.sql`.
+2. *SQL Editor* → ejecutar `database/postgresql/01_crud_usuarios.sql` y luego `database/postgresql/02_universidades.sql`.
 3. *Connect* → **Session pooler** y copiar host, puerto y usuario. Se usa el pooler porque la conexión directa de Supabase es IPv6 y Render no la soporta.
 
 Los scripts activan *Row Level Security* sin políticas: la API REST pública de Supabase no puede leer las tablas, mientras que la aplicación (que conecta como propietaria) funciona normal.
@@ -237,6 +242,6 @@ Los scripts activan *Row Level Security* sin políticas: la API REST pública de
 ### Docker en local (opcional)
 
 ```
-docker build -t crud-docentes .
-docker run -p 8080:80 --env-file .env crud-docentes
+docker build -t crud-universidades .
+docker run -p 8080:80 --env-file .env crud-universidades
 ```
