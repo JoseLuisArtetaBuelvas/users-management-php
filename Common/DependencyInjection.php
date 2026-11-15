@@ -198,6 +198,20 @@ final class DependencyInjection
         return new DeleteDocenteService($repository, $repository);
     }
 
+    public static function getDocenteController(): DocenteController
+    {
+        ClassLoader::loadClass('DocenteController');
+
+        return new DocenteController(
+            self::getCreateDocenteUseCase(),
+            self::getUpdateDocenteUseCase(),
+            self::getGetDocenteByIdUseCase(),
+            self::getGetAllDocentesUseCase(),
+            self::getDeleteDocenteUseCase(),
+            new DocenteWebMapper()
+        );
+    }
+
     public static function getLoginUseCase(): LoginUseCase
     {
         ClassLoader::loadClass('LoginService');

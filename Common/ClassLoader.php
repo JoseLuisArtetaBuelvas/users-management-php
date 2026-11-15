@@ -137,6 +137,12 @@ final class ClassLoader
         'DocenteEntity' => 'Infrastructure/Adapters/Persistence/MySQL/Entity/DocenteEntity.php',
         'DocentePersistenceMapper' => 'Infrastructure/Adapters/Persistence/MySQL/Mapper/DocentePersistenceMapper.php',
         'DocenteRepositoryMySQL' => 'Infrastructure/Adapters/Persistence/MySQL/Repository/DocenteRepositoryMySQL.php',
+
+        'CreateDocenteWebRequest' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/CreateDocenteRequest.php',
+        'UpdateDocenteWebRequest' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/UpdateDocenteRequest.php',
+        'DocenteResponse' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/DocenteResponse.php',
+        'DocenteWebMapper' => 'Infrastructure/Entrypoints/Web/Controllers/Mapper/DocenteWebMapper.php',
+        'DocenteController' => 'Infrastructure/Entrypoints/Web/Controllers/DocenteController.php',
     );
 
     public static function register(): void
