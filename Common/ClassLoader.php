@@ -143,6 +143,64 @@ final class ClassLoader
         'DocenteResponse' => 'Infrastructure/Entrypoints/Web/Controllers/Dto/DocenteResponse.php',
         'DocenteWebMapper' => 'Infrastructure/Entrypoints/Web/Controllers/Mapper/DocenteWebMapper.php',
         'DocenteController' => 'Infrastructure/Entrypoints/Web/Controllers/DocenteController.php',
+
+        // ── Universidad (ejercicio 2) ─────────────────────────────
+        'InvalidUniversidadIdException' => 'Domain/Exceptions/InvalidUniversidadIdException.php',
+        'InvalidUniversidadNombreException' => 'Domain/Exceptions/InvalidUniversidadNombreException.php',
+        'InvalidUniversidadPersonaException' => 'Domain/Exceptions/InvalidUniversidadPersonaException.php',
+        'InvalidUniversidadWebException' => 'Domain/Exceptions/InvalidUniversidadWebException.php',
+        'InvalidUniversidadEmailException' => 'Domain/Exceptions/InvalidUniversidadEmailException.php',
+        'InvalidUniversidadTelefonoException' => 'Domain/Exceptions/InvalidUniversidadTelefonoException.php',
+        'InvalidUniversidadCantidadException' => 'Domain/Exceptions/InvalidUniversidadCantidadException.php',
+        'InvalidUniversidadCategoriaException' => 'Domain/Exceptions/InvalidUniversidadCategoriaException.php',
+        'InvalidUniversidadAccesoException' => 'Domain/Exceptions/InvalidUniversidadAccesoException.php',
+        'UniversidadAlreadyExistsException' => 'Domain/Exceptions/UniversidadAlreadyExistsException.php',
+        'UniversidadNotFoundException' => 'Domain/Exceptions/UniversidadNotFoundException.php',
+
+        'UniversidadCategoriaEnum' => 'Domain/Enums/UniversidadCategoriaEnum.php',
+        'UniversidadAccesoEnum' => 'Domain/Enums/UniversidadAccesoEnum.php',
+
+        'UniversidadId' => 'Domain/ValueObjects/UniversidadId.php',
+        'UniversidadNombre' => 'Domain/ValueObjects/UniversidadNombre.php',
+        'UniversidadNombrePropio' => 'Domain/ValueObjects/UniversidadNombrePropio.php',
+        'UniversidadWeb' => 'Domain/ValueObjects/UniversidadWeb.php',
+        'UniversidadEmail' => 'Domain/ValueObjects/UniversidadEmail.php',
+        'UniversidadTelefono' => 'Domain/ValueObjects/UniversidadTelefono.php',
+        'UniversidadCantidad' => 'Domain/ValueObjects/UniversidadCantidad.php',
+
+        'UniversidadModel' => 'Domain/Models/UniversidadModel.php',
+
+        'CreateUniversidadUseCase' => 'Application/Ports/In/CreateUniversidadUseCase.php',
+        'UpdateUniversidadUseCase' => 'Application/Ports/In/UpdateUniversidadUseCase.php',
+        'GetUniversidadByIdUseCase' => 'Application/Ports/In/GetUniversidadByIdUseCase.php',
+        'GetAllUniversidadesUseCase' => 'Application/Ports/In/GetAllUniversidadesUseCase.php',
+        'DeleteUniversidadUseCase' => 'Application/Ports/In/DeleteUniversidadUseCase.php',
+
+        'SaveUniversidadPort' => 'Application/Ports/Out/SaveUniversidadPort.php',
+        'UpdateUniversidadPort' => 'Application/Ports/Out/UpdateUniversidadPort.php',
+        'GetUniversidadByIdPort' => 'Application/Ports/Out/GetUniversidadByIdPort.php',
+        'GetUniversidadByNombrePort' => 'Application/Ports/Out/GetUniversidadByNombrePort.php',
+        'GetUniversidadByEmailPort' => 'Application/Ports/Out/GetUniversidadByEmailPort.php',
+        'GetAllUniversidadesPort' => 'Application/Ports/Out/GetAllUniversidadesPort.php',
+        'DeleteUniversidadPort' => 'Application/Ports/Out/DeleteUniversidadPort.php',
+
+        'CreateUniversidadCommand' => 'Application/Services/Dto/Commands/CreateUniversidadCommand.php',
+        'UpdateUniversidadCommand' => 'Application/Services/Dto/Commands/UpdateUniversidadCommand.php',
+        'DeleteUniversidadCommand' => 'Application/Services/Dto/Commands/DeleteUniversidadCommand.php',
+        'GetUniversidadByIdQuery' => 'Application/Services/Dto/Queries/GetUniversidadByIdQuery.php',
+        'GetAllUniversidadesQuery' => 'Application/Services/Dto/Queries/GetAllUniversidadesQuery.php',
+
+        'CreateUniversidadService' => 'Application/Services/CreateUniversidadService.php',
+        'UpdateUniversidadService' => 'Application/Services/UpdateUniversidadService.php',
+        'GetUniversidadByIdService' => 'Application/Services/GetUniversidadByIdService.php',
+        'GetAllUniversidadesService' => 'Application/Services/GetAllUniversidadesService.php',
+        'DeleteUniversidadService' => 'Application/Services/DeleteUniversidadService.php',
+        'UniversidadApplicationMapper' => 'Application/Services/Mappers/UniversidadApplicationMapper.php',
+
+        'UniversidadPersistenceDto' => 'Infrastructure/Adapters/Persistence/MySQL/Dto/UniversidadPersistenceDto.php',
+        'UniversidadEntity' => 'Infrastructure/Adapters/Persistence/MySQL/Entity/UniversidadEntity.php',
+        'UniversidadPersistenceMapper' => 'Infrastructure/Adapters/Persistence/MySQL/Mapper/UniversidadPersistenceMapper.php',
+        'UniversidadRepositoryMySQL' => 'Infrastructure/Adapters/Persistence/MySQL/Repository/UniversidadRepositoryMySQL.php',
     );
 
     public static function register(): void
