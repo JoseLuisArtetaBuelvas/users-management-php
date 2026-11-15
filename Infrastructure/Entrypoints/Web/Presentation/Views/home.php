@@ -35,14 +35,5 @@
     <li><strong>L:</strong> <a href="?route=universidades.index">Listar y buscar universidades</a></li>
 </ul>
 
-<h2>CRUDL de docentes (ejercicio 3)</h2>
-
-<ul>
-    <li><strong>C:</strong> <a href="?route=docentes.create">Registrar docente</a></li>
-    <li><strong>R:</strong> Consultar docente (botón <em>Ver</em> del listado)</li>
-    <li><strong>U:</strong> Actualizar docente (botón <em>Editar</em> del listado)</li>
-    <li><strong>D:</strong> Eliminar docente (botón <em>Eliminar</em> del listado)</li>
-    <li><strong>L:</strong> <a href="?route=docentes.index">Listar y buscar docentes</a></li>
-</ul>
 
 <?php require __DIR__ . '/layouts/footer.php'; ?>
