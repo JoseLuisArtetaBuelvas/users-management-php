@@ -20,6 +20,18 @@ function confirmDelete(form) {
  * @param {HTMLFormElement} form
  * @returns {boolean}
  */
+/**
+ * Confirmación para eliminar una universidad (usa el atributo data-name del formulario).
+ *
+ * @param {HTMLFormElement} form
+ * @returns {boolean}
+ */
+function confirmDeleteUniversidad(form) {
+
+    var name = form.getAttribute('data-name');
+    return confirm('¿Eliminar la universidad ' + name + '? Esta acción no se puede deshacer.');
+}
+
 function confirmDeleteDocente(form) {
 
     var name = form.getAttribute('data-name');
