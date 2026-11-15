@@ -135,3 +135,28 @@ table.detail-table th {
     border-radius: 6px;
     background: #fafafa;
 }
+/* ── Docentes (ejercicio 3) ── */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0 24px;
+    max-width: 960px;
+}
+
+.search-form {
+    margin: 12px 0 18px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #eaf8ec;
+    color: #2d8a34;
+    font-size: 0.75rem;
+}

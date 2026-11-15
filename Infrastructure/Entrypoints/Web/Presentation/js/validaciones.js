@@ -13,3 +13,15 @@ function confirmDelete(form) {
     var name = form.getAttribute('data-name');
     return confirm('¿Eliminar al usuario ' + name + '?');
 }
+
+/**
+ * Confirmación para eliminar un docente (usa el atributo data-name del formulario).
+ *
+ * @param {HTMLFormElement} form
+ * @returns {boolean}
+ */
+function confirmDeleteDocente(form) {
+
+    var name = form.getAttribute('data-name');
+    return confirm('¿Eliminar al docente ' + name + '? Esta acción no se puede deshacer.');
+}

@@ -277,6 +277,109 @@ try {
             View::redirect('auth.forgot');
             break;
 
+        // ── Docentes (ejercicio 3) ──────────────────────────────
+
+        case 'docentes.index':
+            $search = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
+            $docentes = DependencyInjection::getDocenteController()->index($search);
+            View::render('docentes/list', array(
+                'pageTitle' => 'Lista de docentes',
+                'docentes' => $docentes,
+                'search' => $search,
+                'message' => Flash::message(),
+                'success' => Flash::success(),
+            ));
+            break;
+
+        case 'docentes.create':
+            View::render('docentes/create', buildDocenteFormViewData('Registrar docente'));
+            break;
+
+        case 'docentes.store':
+            $form = getDocenteFormData();
+            $form['id'] = generateUuid4();
+            $errors = validateDocenteForm($form);
+
+            if (!empty($errors)) {
+                Flash::setOld($form);
+                Flash::setErrors($errors);
+                Flash::setMessage('Corrige los errores del formulario.');
+                View::redirect('docentes.create');
+            }
+
+            DependencyInjection::getDocenteController()->store(new CreateDocenteWebRequest(
+                $form['id'],
+                $form['nombre'],
+                $form['apellidos'],
+                $form['email'],
+                $form['telefono'],
+                $form['blog'],
+                $form['profesional'],
+                $form['escalafon'],
+                $form['idioma'],
+                $form['aniosExperiencia'],
+                $form['areaTrabajo']
+            ));
+
+            Flash::setSuccess('Docente registrado correctamente.');
+            View::redirect('docentes.index');
+            break;
+
+        case 'docentes.show':
+            $id = isset($_GET['id']) ? trim((string) $_GET['id']) : '';
+            View::render('docentes/show', array(
+                'pageTitle' => 'Detalle de docente',
+                'docente' => DependencyInjection::getDocenteController()->show($id),
+                'message' => Flash::message(),
+            ));
+            break;
+
+        case 'docentes.edit':
+            $id = isset($_GET['id']) ? trim((string) $_GET['id']) : '';
+            $docente = DependencyInjection::getDocenteController()->show($id);
+            $data = buildDocenteFormViewData('Editar docente');
+            $data['old'] = !empty($data['old']) ? $data['old'] : $docente->toFormArray();
+            View::render('docentes/edit', $data);
+            break;
+
+        case 'docentes.update':
+            $form = getDocenteFormData();
+            $form['id'] = isset($_POST['id']) ? trim((string) $_POST['id']) : '';
+            $errors = validateDocenteForm($form);
+
+            if (!empty($errors)) {
+                Flash::setOld($form);
+                Flash::setErrors($errors);
+                Flash::setMessage('Corrige los errores del formulario.');
+                header('Location: ?route=docentes.edit&id=' . urlencode($form['id']));
+                exit;
+            }
+
+            DependencyInjection::getDocenteController()->update(new UpdateDocenteWebRequest(
+                $form['id'],
+                $form['nombre'],
+                $form['apellidos'],
+                $form['email'],
+                $form['telefono'],
+                $form['blog'],
+                $form['profesional'],
+                $form['escalafon'],
+                $form['idioma'],
+                $form['aniosExperiencia'],
+                $form['areaTrabajo']
+            ));
+
+            Flash::setSuccess('Docente actualizado correctamente.');
+            View::redirect('docentes.index');
+            break;
+
+        case 'docentes.delete':
+            $id = isset($_POST['id']) ? trim((string) $_POST['id']) : '';
+            DependencyInjection::getDocenteController()->delete($id);
+            Flash::setSuccess('Docente eliminado correctamente.');
+            View::redirect('docentes.index');
+            break;
+
         default:
             throw new RuntimeException('Acción no soportada.');
     }
@@ -314,6 +417,24 @@ try {
         case 'users.delete':
             Flash::setMessage($msg);
             View::redirect('users.index');
+            break;
+
+        case 'docentes.store':
+            Flash::setOld(getDocenteFormData());
+            View::redirect('docentes.create');
+            break;
+
+        case 'docentes.update':
+            $docenteId = trim((string) ($_POST['id'] ?? ''));
+            Flash::setOld(array_merge(getDocenteFormData(), array('id' => $docenteId)));
+            header('Location: ?route=docentes.edit&id=' . urlencode($docenteId));
+            exit;
+
+        case 'docentes.show':
+        case 'docentes.edit':
+        case 'docentes.delete':
+        case 'docentes.index':
+            View::redirect($route === 'docentes.index' ? 'home' : 'docentes.index');
             break;
 
         default:
@@ -402,6 +523,83 @@ function buildEditUserViewData(UserResponse $user): array
     );
 }
 
+
+/**
+ * @return array<string, mixed>
+ */
+function buildDocenteFormViewData(string $pageTitle): array
+{
+    return array(
+        'pageTitle' => $pageTitle,
+        'escalafonOptions' => DocenteEscalafonEnum::values(),
+        'idiomaOptions' => DocenteIdiomaEnum::values(),
+        'message' => Flash::message(),
+        'errors' => Flash::errors(),
+        'old' => Flash::old(),
+    );
+}
+
+/**
+ * @return array<string, string>
+ */
+function getDocenteFormData(): array
+{
+    $fields = array(
+        'nombre', 'apellidos', 'email', 'telefono', 'blog', 'profesional',
+        'escalafon', 'idioma', 'aniosExperiencia', 'areaTrabajo',
+    );
+    $data = array();
+
+    foreach ($fields as $field) {
+        $data[$field] = isset($_POST[$field]) ? trim((string) $_POST[$field]) : '';
+    }
+
+    return $data;
+}
+
+/**
+ * Validación de formulario (primera barrera, amigable para el usuario).
+ * Las reglas definitivas viven en los Value Objects del dominio.
+ *
+ * @param array<string, string> $form
+ * @return array<string, string>
+ */
+function validateDocenteForm(array $form): array
+{
+    $errors = array();
+    $required = array(
+        'nombre' => 'El nombre es obligatorio.',
+        'apellidos' => 'Los apellidos son obligatorios.',
+        'email' => 'El correo es obligatorio.',
+        'telefono' => 'El teléfono es obligatorio.',
+        'profesional' => 'El título profesional es obligatorio.',
+        'escalafon' => 'El escalafón es obligatorio.',
+        'idioma' => 'El idioma es obligatorio.',
+        'aniosExperiencia' => 'Los años de experiencia son obligatorios.',
+        'areaTrabajo' => 'El área de trabajo es obligatoria.',
+    );
+
+    foreach ($required as $field => $message) {
+        if ($form[$field] === '') {
+            $errors[$field] = $message;
+        }
+    }
+
+    if (!isset($errors['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'El correo no tiene un formato válido.';
+    }
+
+    if ($form['blog'] !== '' && !filter_var($form['blog'], FILTER_VALIDATE_URL)) {
+        $errors['blog'] = 'El blog debe ser una URL válida (https://...).';
+    }
+
+    if (!isset($errors['aniosExperiencia'])
+        && (!ctype_digit($form['aniosExperiencia']) || (int) $form['aniosExperiencia'] > 60)) {
+        $errors['aniosExperiencia'] = 'Los años de experiencia deben ser un número entre 0 y 60.';
+    }
+
+    return $errors;
+}
 
 function generateUuid4(): string
 {
