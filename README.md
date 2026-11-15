@@ -198,3 +198,45 @@ php tests/DocenteDomainTest.php            # reglas del dominio (26 casos)
 php tests/DocenteApplicationTest.php       # casos de uso con adaptador en memoria (11 casos)
 php tests/DocenteRepositoryMySQLTest.php   # integración con MySQL (6 casos, requiere la BD)
 ```
+---
+
+## Despliegue: Render + Supabase (PostgreSQL)
+
+La base de datos en la nube es **Supabase (PostgreSQL)** y la aplicación corre en **Render** con Docker. Gracias a la arquitectura hexagonal, el cambio de motor solo tocó la infraestructura (`Connection` y una consulta); dominio y aplicación no cambiaron.
+
+### Variables de entorno
+
+Toda la configuración sale de variables de entorno (`EnvLoader`). En local se leen de `.env`; en Render se crean en *Environment* y tienen prioridad. Ver `.env.example`.
+
+| Variable | Local (MariaDB) | Render (Supabase) |
+|---|---|---|
+| `DB_DRIVER` | `mysql` | `pgsql` |
+| `DB_HOST` | `127.0.0.1` | `aws-0-<region>.pooler.supabase.com` |
+| `DB_PORT` | `3306` | `5432` |
+| `DB_DATABASE` | `crud_usuarios` | `postgres` |
+| `DB_USERNAME` | `Estudiante` | `postgres.<id-del-proyecto>` |
+| `DB_PASSWORD` | `Developer` | clave de la BD de Supabase |
+| `DB_SSLMODE` | (vacío) | `require` |
+
+### 1. Supabase
+
+1. Crear un proyecto en supabase.com y guardar la clave de la base de datos.
+2. *SQL Editor* → ejecutar `database/postgresql/01_crud_usuarios.sql` y luego `database/postgresql/02_docentes.sql`.
+3. *Connect* → **Session pooler** y copiar host, puerto y usuario. Se usa el pooler porque la conexión directa de Supabase es IPv6 y Render no la soporta.
+
+Los scripts activan *Row Level Security* sin políticas: la API REST pública de Supabase no puede leer las tablas, mientras que la aplicación (que conecta como propietaria) funciona normal.
+
+### 2. Render
+
+1. *New* → **Blueprint** → elegir este repositorio (usa `render.yaml`), o *New* → *Web Service* → runtime **Docker**.
+2. Completar las variables marcadas como secretas: `DB_HOST`, `DB_USERNAME`, `DB_PASSWORD` (y SMTP si se desea).
+3. Al terminar el despliegue, abrir `https://<servicio>.onrender.com/` e iniciar sesión con `admin@crud.com` / `admin123`.
+
+> El plan gratis de Render suspende el servicio por inactividad: la primera carga puede tardar cerca de un minuto. También bloquea los puertos SMTP: el envío de correo falla, pero la aplicación sigue funcionando y el error queda en el log.
+
+### Docker en local (opcional)
+
+```
+docker build -t crud-docentes .
+docker run -p 8080:80 --env-file .env crud-docentes
+```
