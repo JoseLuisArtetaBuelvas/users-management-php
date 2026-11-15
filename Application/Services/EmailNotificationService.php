@@ -32,8 +32,9 @@ final class EmailNotificationService
             $this->emailSenderPort->send($destination);
 
         } catch (EmailSenderException $e) {
+            // The notification is a side effect: the user is already saved,
+            // so a mail failure is logged and must not abort the use case.
             error_log('[EmailNotificationService] ' . $e->getMessage());
-            throw $e;
         }
     }
 
@@ -53,8 +54,9 @@ final class EmailNotificationService
             $this->emailSenderPort->send($destination);
 
         } catch (EmailSenderException $e) {
+            // The notification is a side effect: the user is already saved,
+            // so a mail failure is logged and must not abort the use case.
             error_log('[EmailNotificationService] ' . $e->getMessage());
-            throw $e;
         }
     }
 
