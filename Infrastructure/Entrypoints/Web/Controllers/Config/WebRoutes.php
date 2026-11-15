@@ -92,6 +92,36 @@ final class WebRoutes
                 'method' => 'POST',
                 'action' => 'docentes.delete',
             ),
+
+            // ── Universidades (ejercicio 2) ── requieren sesión iniciada
+            'universidades.index' => array(
+                'method' => 'GET',
+                'action' => 'universidades.index',
+            ),
+            'universidades.create' => array(
+                'method' => 'GET',
+                'action' => 'universidades.create',
+            ),
+            'universidades.store' => array(
+                'method' => 'POST',
+                'action' => 'universidades.store',
+            ),
+            'universidades.show' => array(
+                'method' => 'GET',
+                'action' => 'universidades.show',
+            ),
+            'universidades.edit' => array(
+                'method' => 'GET',
+                'action' => 'universidades.edit',
+            ),
+            'universidades.update' => array(
+                'method' => 'POST',
+                'action' => 'universidades.update',
+            ),
+            'universidades.delete' => array(
+                'method' => 'POST',
+                'action' => 'universidades.delete',
+            ),
         );
     }
 }

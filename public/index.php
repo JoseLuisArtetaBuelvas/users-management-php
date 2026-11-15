@@ -380,6 +380,90 @@ try {
             View::redirect('docentes.index');
             break;
 
+        // ── Universidades (ejercicio 2) ─────────────────────────
+
+        case 'universidades.index':
+            $search = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
+            View::render('universidades/list', array(
+                'pageTitle' => 'Lista de universidades',
+                'universidades' => DependencyInjection::getUniversidadController()->index($search),
+                'search' => $search,
+                'message' => Flash::message(),
+                'success' => Flash::success(),
+            ));
+            break;
+
+        case 'universidades.create':
+            View::render('universidades/create', buildUniversidadFormViewData('Registrar universidad'));
+            break;
+
+        case 'universidades.store':
+            $form = getUniversidadFormData();
+            $form['id'] = generateUuid4();
+            $errors = validateUniversidadForm($form);
+
+            if (!empty($errors)) {
+                Flash::setOld($form);
+                Flash::setErrors($errors);
+                Flash::setMessage('Corrige los errores del formulario.');
+                View::redirect('universidades.create');
+            }
+
+            DependencyInjection::getUniversidadController()->store(new CreateUniversidadWebRequest(
+                $form['id'], $form['nombre'], $form['categoria'], $form['web'], $form['rector'], $form['email'],
+                $form['acceso'], $form['telefono'], $form['ciudad'], $form['numeroCarreras'], $form['numSedes']
+            ));
+
+            Flash::setSuccess('Universidad registrada correctamente.');
+            View::redirect('universidades.index');
+            break;
+
+        case 'universidades.show':
+            $id = isset($_GET['id']) ? trim((string) $_GET['id']) : '';
+            View::render('universidades/show', array(
+                'pageTitle' => 'Detalle de universidad',
+                'universidad' => DependencyInjection::getUniversidadController()->show($id),
+                'message' => Flash::message(),
+            ));
+            break;
+
+        case 'universidades.edit':
+            $id = isset($_GET['id']) ? trim((string) $_GET['id']) : '';
+            $universidad = DependencyInjection::getUniversidadController()->show($id);
+            $data = buildUniversidadFormViewData('Editar universidad');
+            $data['old'] = !empty($data['old']) ? $data['old'] : $universidad->toFormArray();
+            View::render('universidades/edit', $data);
+            break;
+
+        case 'universidades.update':
+            $form = getUniversidadFormData();
+            $form['id'] = isset($_POST['id']) ? trim((string) $_POST['id']) : '';
+            $errors = validateUniversidadForm($form);
+
+            if (!empty($errors)) {
+                Flash::setOld($form);
+                Flash::setErrors($errors);
+                Flash::setMessage('Corrige los errores del formulario.');
+                header('Location: ?route=universidades.edit&id=' . urlencode($form['id']));
+                exit;
+            }
+
+            DependencyInjection::getUniversidadController()->update(new UpdateUniversidadWebRequest(
+                $form['id'], $form['nombre'], $form['categoria'], $form['web'], $form['rector'], $form['email'],
+                $form['acceso'], $form['telefono'], $form['ciudad'], $form['numeroCarreras'], $form['numSedes']
+            ));
+
+            Flash::setSuccess('Universidad actualizada correctamente.');
+            View::redirect('universidades.index');
+            break;
+
+        case 'universidades.delete':
+            $id = isset($_POST['id']) ? trim((string) $_POST['id']) : '';
+            DependencyInjection::getUniversidadController()->delete($id);
+            Flash::setSuccess('Universidad eliminada correctamente.');
+            View::redirect('universidades.index');
+            break;
+
         default:
             throw new RuntimeException('Acción no soportada.');
     }
@@ -417,6 +501,24 @@ try {
         case 'users.delete':
             Flash::setMessage($msg);
             View::redirect('users.index');
+            break;
+
+        case 'universidades.store':
+            Flash::setOld(getUniversidadFormData());
+            View::redirect('universidades.create');
+            break;
+
+        case 'universidades.update':
+            $universidadId = trim((string) ($_POST['id'] ?? ''));
+            Flash::setOld(array_merge(getUniversidadFormData(), array('id' => $universidadId)));
+            header('Location: ?route=universidades.edit&id=' . urlencode($universidadId));
+            exit;
+
+        case 'universidades.show':
+        case 'universidades.edit':
+        case 'universidades.delete':
+        case 'universidades.index':
+            View::redirect($route === 'universidades.index' ? 'home' : 'universidades.index');
             break;
 
         case 'docentes.store':
@@ -596,6 +698,99 @@ function validateDocenteForm(array $form): array
     if (!isset($errors['aniosExperiencia'])
         && (!ctype_digit($form['aniosExperiencia']) || (int) $form['aniosExperiencia'] > 60)) {
         $errors['aniosExperiencia'] = 'Los años de experiencia deben ser un número entre 0 y 60.';
+    }
+
+    return $errors;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function buildUniversidadFormViewData(string $pageTitle): array
+{
+    $categorias = array();
+    foreach (UniversidadCategoriaEnum::values() as $value) {
+        $categorias[$value] = UniversidadCategoriaEnum::label($value);
+    }
+
+    $accesos = array();
+    foreach (UniversidadAccesoEnum::values() as $value) {
+        $accesos[$value] = UniversidadAccesoEnum::label($value);
+    }
+
+    return array(
+        'pageTitle' => $pageTitle,
+        'categoriaOptions' => $categorias,
+        'accesoOptions' => $accesos,
+        'message' => Flash::message(),
+        'errors' => Flash::errors(),
+        'old' => Flash::old(),
+    );
+}
+
+/**
+ * @return array<string, string>
+ */
+function getUniversidadFormData(): array
+{
+    $fields = array(
+        'nombre', 'categoria', 'web', 'rector', 'email', 'acceso',
+        'telefono', 'ciudad', 'numeroCarreras', 'numSedes',
+    );
+    $data = array();
+
+    foreach ($fields as $field) {
+        $data[$field] = isset($_POST[$field]) ? trim((string) $_POST[$field]) : '';
+    }
+
+    return $data;
+}
+
+/**
+ * Validación de formulario (primera barrera, amigable para el usuario).
+ * Las reglas definitivas viven en los Value Objects del dominio.
+ *
+ * @param array<string, string> $form
+ * @return array<string, string>
+ */
+function validateUniversidadForm(array $form): array
+{
+    $errors = array();
+    $required = array(
+        'nombre' => 'El nombre es obligatorio.',
+        'categoria' => 'La categoría es obligatoria.',
+        'web' => 'La web es obligatoria.',
+        'rector' => 'El rector es obligatorio.',
+        'email' => 'El correo es obligatorio.',
+        'acceso' => 'La modalidad de acceso es obligatoria.',
+        'telefono' => 'El teléfono es obligatorio.',
+        'ciudad' => 'La ciudad es obligatoria.',
+        'numeroCarreras' => 'El número de carreras es obligatorio.',
+        'numSedes' => 'El número de sedes es obligatorio.',
+    );
+
+    foreach ($required as $field => $message) {
+        if ($form[$field] === '') {
+            $errors[$field] = $message;
+        }
+    }
+
+    if (!isset($errors['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'El correo no tiene un formato válido.';
+    }
+
+    if (!isset($errors['web']) && !filter_var($form['web'], FILTER_VALIDATE_URL)) {
+        $errors['web'] = 'La web debe ser una URL válida (https://...).';
+    }
+
+    if (!isset($errors['numeroCarreras'])
+        && (!ctype_digit($form['numeroCarreras']) || (int) $form['numeroCarreras'] < 1 || (int) $form['numeroCarreras'] > 500)) {
+        $errors['numeroCarreras'] = 'El número de carreras debe estar entre 1 y 500.';
+    }
+
+    if (!isset($errors['numSedes'])
+        && (!ctype_digit($form['numSedes']) || (int) $form['numSedes'] < 1 || (int) $form['numSedes'] > 100)) {
+        $errors['numSedes'] = 'El número de sedes debe estar entre 1 y 100.';
     }
 
     return $errors;
